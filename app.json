@@ -22,6 +22,17 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "fonts": {
+      "smoth": "./assets/smothfont.ttf"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "WE NEED YOUR CAMERA TO SPY ON YOU, GRANT US PERMISSION OR YOU SHALL SLEEP WITH ONE EYE OPEN (as if you can sleep tonight after this mission derishishishishi)"
+        }
+      ]
+    ]
   }
 }
