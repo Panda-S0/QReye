@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from "react"
-import { Text, View, StyleSheet } from "react-native"
+import { Text, View, StyleSheet, Button } from "react-native"
 import { CameraView, Camera } from "expo-camera"
 
 export default function Yesting({ setLink, webShowing }) {
   const [hasPermission, setHasPermission] = useState(null)
   const [scanned, setScanned] = useState(false)
+  const [btntxt, setBtntxt] = useState("")
+  function isValidUrl(string) {
+    try {
+      new URL(string) // Attempt to create a new URL object
+      return true // If successful, it's a valid URL
+    } catch (_) {
+      return false // If an error is thrown, it's not a valid URL
+    }
+  }
 
   useEffect(() => {
     const getCameraPermissions = async () => {
@@ -19,15 +28,22 @@ export default function Yesting({ setLink, webShowing }) {
     console.log(
       `Bar code with type '${type}' and data "${data}" has been scanned!`
     )
-    setScanned(true)
-    setLink(data)
-    // alert(
-    //   `Bar code with type ${type} and data "${data}" has been scanned!`
-    // )
+    if (isValidUrl(data)) {
+      setScanned(true)
+      setLink(data)
+    } else {
+      if (data.length <= 50) {
+        setBtntxt(data)
+      } else {
+        setBtntxt(data.slice(0, 50) + "...")
+      }
+      setScanned(true)
+    }
   }
 
   useEffect(() => {
     setScanned(webShowing)
+    setBtntxt("")
   }, [webShowing])
 
   if (hasPermission === null) {
@@ -46,6 +62,16 @@ export default function Yesting({ setLink, webShowing }) {
         }}
         style={StyleSheet.absoluteFillObject}
       />
+      <View style={styles.btnout}>
+        <View style={styles.btnin}>
+          {scanned && btntxt && (
+            <Button
+              title={`QR with data: ${btntxt}\n is not a link, tap to scan again`}
+              onPress={() => setScanned(false)}
+            />
+          )}
+        </View>
+      </View>
     </View>
   )
 }
@@ -56,4 +82,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
   },
+  btnout: {
+    width: "100%",
+    alignItems: "center",
+  },
+  btnin: { width: "50%" },
 })
