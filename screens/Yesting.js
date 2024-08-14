@@ -67,7 +67,10 @@ export default function Yesting({ setLink, webShowing }) {
           {scanned && btntxt && (
             <Button
               title={`QR with data: ${btntxt}\n is not a link, tap to scan again`}
-              onPress={() => setScanned(false)}
+              onPress={() => {
+                setScanned(false)
+                setBtntxt("")
+              }}
             />
           )}
         </View>
